@@ -2,12 +2,16 @@
 #include "uart.h"
 #include <stddef.h>
 
-extern int sec_sum(void);
+extern int sec_sum(int idx);
 
 /* Non Secure main() */
 int main(void) {
-    sec_sum();
+    int i = 0;
 
-    while(1);
+    while(1)
+    {
+        sec_sum(i++);
+    }
+
     return 0;
 }

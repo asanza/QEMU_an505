@@ -5,6 +5,7 @@
 
 #include <arm_cmse.h>
 #include <stdint.h>
+#include <stdio.h>
 
 /*------------------- Memory Protection Controller -----------------------------*/
 typedef struct /* see "ARM CoreLink SSE-200 Subsystem Technical Reference Manual r1p0" */
@@ -29,7 +30,7 @@ typedef struct /* see "ARM CoreLink SSE-200 Subsystem Technical Reference Manual
 
 void printCmseAddressInfo(uint32_t addr)
 {
-    cmse_address_info_t c = cmse_TTA(addr);
+    cmse_address_info_t c = cmse_TTA((void*) addr);
     logPrint("Address: 0x%x\n", addr);
     logPrint(" |mpu_region: %x\n", c.flags.mpu_region);
     logPrint(" |sau_region: %x\n", c.flags.sau_region);
@@ -51,9 +52,11 @@ void __aeabi_unwind_cpp_pr0()
 /* Non-Secure Callable functions */
 typedef int __attribute__((cmse_nonsecure_call)) ns_func_void(void);
 
-void __attribute__((cmse_nonsecure_entry)) sec_sum(void)
+void __attribute__((cmse_nonsecure_entry)) sec_sum(int idx)
 {
-  logPrint("Called secure function!!\n");
+  char buf[100];
+  sprintf(buf, "On the secure world! %d\n", idx);
+  printString(buf);
 }
 
 void nonsecure_init(void) {
@@ -73,7 +76,7 @@ void nonsecure_init(void) {
    * of the Non-Secure
    */
     ns_func_void *ns_reset = (ns_func_void*) (*(vtor + 1));
-    printCmseAddressInfo(ns_reset);
+    printCmseAddressInfo((uint32_t) ns_reset);
 
     ns_reset();
 }
@@ -139,7 +142,7 @@ int main(void)
     initUart();
     printString("Start\n");
  
-    volatile uint32_t* spcb = 0x50080000 + 0x14;
+    volatile uint32_t* spcb = (uint32_t*) (0x50080000 + 0x14);
     *spcb |= 1 | 2;
     logPrint("SPCB content 0x%x\n", *spcb);
    
@@ -161,6 +164,21 @@ int main(void)
     printCmseAddressInfo(0x20000000);
     printCmseAddressInfo(SAU_INIT_START2);
     printCmseAddressInfo(SAU_INIT_END2);
+
+    // Print the whole SAU configuration
+    logPrint("\n--- SAU Configuration ---\n");
+    char buf[100];
+    logPrint("SAU_CTRL   : 0x%x\n", SAU->CTRL);
+    logPrint("SAU_TYPE   : 0x%x\n", SAU->TYPE);
+    for (int i = 0; i < 8; ++i) {
+        SAU->RNR = i;
+        sprintf(buf, "SAU_RBAR[%d] : 0x%lx\n", i, SAU->RBAR);
+        printString(buf);
+        sprintf(buf, "SAU_RLAR[%d] : 0x%lx\n", i, SAU->RLAR);
+        printString(buf);
+    }
+    logPrint("--- End SAU Configuration ---\n\n");
+
     /* Jump to Non-Secure main address */
     nonsecure_init();
 

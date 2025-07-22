@@ -6,10 +6,10 @@ BINARY_ALL = image_s_ns.elf
 MACHINE_NAME := mps2-an505
 
 CMSIS_PATH ?= ./CMSIS_5
-QEMU_PATH ?= ./qemu/build/arm-softmmu/qemu-system-arm
-TOOLCHAIN_PATH ?= ./gcc-arm-none-eabi-8-2019-q3-update/bin
+QEMU_PATH ?= qemu-system-arm
+TOOLCHAIN_PATH ?= 
 
-CROSS_COMPILE = $(TOOLCHAIN_PATH)/arm-none-eabi-
+CROSS_COMPILE = $(TOOLCHAIN_PATH)arm-none-eabi-
 CC = $(CROSS_COMPILE)gcc
 LD = $(CROSS_COMPILE)ld
 GDB = $(CROSS_COMPILE)gdb
@@ -41,7 +41,8 @@ INCLUDE_FLAGS = \
 
 COMMON_CFLAGS = \
     -mcpu=cortex-m33 \
-    -g \
+    -ggdb \
+	-g3 \
     $(INCLUDE_FLAGS) \
     -nostartfiles -ffreestanding \
     -mthumb
@@ -116,9 +117,10 @@ run: $(BINARY_S) $(BINARY_NS)
 		-m 16M \
 		-nographic \
 		-semihosting \
-		-d int,cpu_reset \
+        -monitor null\
 		-device loader,file=$(BINARY_NS) \
 		-device loader,file=$(BINARY_S)
+# -d int,cpu_reset \
 
 gdbserver: $(BINARY_S) $(BINARY_NS)
 	$(QEMU_PATH) \
@@ -127,13 +129,14 @@ gdbserver: $(BINARY_S) $(BINARY_NS)
 		-m 16M \
 		-nographic \
 		-semihosting \
+		-monitor null\
 		-device loader,file=$(BINARY_NS) \
 		-device loader,file=$(BINARY_S) \
 		-d int,cpu_reset \
 		-S -s 
 
 gdb: $(BINARY)
-	$(GDB) $(BINARY_S) -ex "target remote:1234"
+	$(GDB) $(BINARY_S) -ex "target remote:1234" -ex "add-symbol-file $(BINARY_NS)"
 
 help:
 	$(QEMU_PATH) --machine help
