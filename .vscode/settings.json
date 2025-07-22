@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.h": "c",
+        "regex": "c"
+    },
+    "cortex-debug.variableUseNaturalFormat": false
+}
