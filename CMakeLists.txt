@@ -58,8 +58,8 @@ add_compile_options(
 )
 
 add_link_options(
-    --specs=nosys.specs
     --specs=nano.specs
+    --specs=rdimon.specs
     -ffunction-sections
     -Wl,--gc-sections
     -mcpu=cortex-m33

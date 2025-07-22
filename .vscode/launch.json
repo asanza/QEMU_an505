@@ -1,0 +1,26 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug",
+            "cwd": "${workspaceFolder}",
+            "executable": "./build/secure.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "runToEntryPoint": "main",
+            "servertype": "qemu",
+            "machine": "mps2-an505",
+            "cpu": "cortex-m33",
+            "serverArgs": [
+                "-device", "loader,file=./build/nonsecure.elf",
+                "-m", "16M"
+            ],
+            "postLaunchCommands": [
+                "add-symbol-file build/nonsecure.elf"
+            ]
+        }
+    ]
+}

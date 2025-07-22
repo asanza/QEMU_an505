@@ -2,7 +2,7 @@
 #include "uart.h"
 #include <stddef.h>
 
-extern int sec_sum(int idx);
+extern int sec_sum(int idx, int m);
 
 /* Non Secure main() */
 int main(void) {
@@ -10,7 +10,7 @@ int main(void) {
 
     while(1)
     {
-        sec_sum(i++);
+        i = sec_sum(i, 1);
     }
 
     return 0;

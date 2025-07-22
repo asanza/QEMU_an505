@@ -17,7 +17,7 @@
 #define UARTDR(base) (*((volatile uint32_t *)(base + 0x00)))
 #define UARTCTRL(base) (*((volatile uint32_t *)(base + 0x08)))
 
-void initUart(void)
+void uart_init(void)
 {
   UARTCTRL(UART0_BASE) = 1 /* TX_ENABLE	*/;
 }

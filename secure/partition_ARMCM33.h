@@ -94,7 +94,7 @@
 //   <e>Initialize SAU Region 1
 //   <i> Setup SAU Region 1 memory attributes
 */
-#define SAU_INIT_REGION1    1
+#define SAU_INIT_REGION1    1 /* RAM1_NS */
 
 /*
 //     <o>Start Address <0-0xFFFFFFE0>
@@ -104,7 +104,7 @@
 /*
 //     <o>End Address <0x1F-0xFFFFFFFF>
 */
-#define SAU_INIT_END1       0x20400000
+#define SAU_INIT_END1       0x20008000
 
 /*
 //     <o>Region is
@@ -125,12 +125,12 @@
 /*
 //     <o>Start Address <0-0xFFFFFFE0>
 */
-#define SAU_INIT_START2     0x10001000
+#define SAU_INIT_START2     0x10000000 /* FLASH_S */
 
 /*
 //     <o>End Address <0x1F-0xFFFFFFFF>
 */
-#define SAU_INIT_END2       0x10002000
+#define SAU_INIT_END2       (SAU_INIT_START2 + 0x00200000)
 
 /*
 //     <o>Region is
@@ -146,7 +146,7 @@
 //   <e>Initialize SAU Region 3
 //   <i> Setup SAU Region 3 memory attributes
 */
-#define SAU_INIT_REGION3    1
+#define SAU_INIT_REGION3    1 /* RAM_NS */
 
 /*
 //     <o>Start Address <0-0xFFFFFFE0>
@@ -172,24 +172,24 @@
 //   <e>Initialize SAU Region 4
 //   <i> Setup SAU Region 4 memory attributes
 */
-#define SAU_INIT_REGION4    0
+#define SAU_INIT_REGION4    1 /* RAM_S */
 
 /*
 //     <o>Start Address <0-0xFFFFFFE0>
 */
-#define SAU_INIT_START4     0x00000000      /* start address of SAU region 4 */
+#define SAU_INIT_START4     0x38000000      /* start address of SAU region 4 */
 
 /*
 //     <o>End Address <0x1F-0xFFFFFFFF>
 */
-#define SAU_INIT_END4       0x00000000      /* end address of SAU region 4 */
+#define SAU_INIT_END4       0x38200000      /* end address of SAU region 4 */
 
 /*
 //     <o>Region is
 //         <0=>Non-Secure
 //         <1=>Secure, Non-Secure Callable
 */
-#define SAU_INIT_NSC4       0
+#define SAU_INIT_NSC4       1
 /*
 //   </e>
 */
@@ -198,17 +198,17 @@
 //   <e>Initialize SAU Region 5
 //   <i> Setup SAU Region 5 memory attributes
 */
-#define SAU_INIT_REGION5    0
+#define SAU_INIT_REGION5    0 /* FLASH_NS */
 
 /*
 //     <o>Start Address <0-0xFFFFFFE0>
 */
-#define SAU_INIT_START5     0x00000000
+#define SAU_INIT_START5     0x00200000
 
 /*
 //     <o>End Address <0x1F-0xFFFFFFFF>
 */
-#define SAU_INIT_END5       0x00000000
+#define SAU_INIT_END5       0x00400000
 
 /*
 //     <o>Region is
