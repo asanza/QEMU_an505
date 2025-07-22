@@ -1,22 +1,14 @@
 __STACK_SIZE = 0x00100000;
 
-    /* NS Code Memory
-    CODE_NS      (rx)  : ORIGIN = 0x00000000, LENGTH = 224M
-
-    /* S Code Memory 
-    CODE_S       (rx)  : ORIGIN = 0x10000000, LENGTH = 224M
-
-    /* Internal SRAM 
-    SRAM0        (rwx) : ORIGIN = 0x20000000, LENGTH = 16M
-    SRAM1        (rwx) : ORIGIN = 0x30000000, LENGTH = 16M 
-    */
-
-
 MEMORY
 {
  /* Flash is actually 224M */
-   FLASH_S     (rx)  : ORIGIN = 0x10000000, LENGTH = 512K
-   RAM_S       (rwx) : ORIGIN = 0x38000000, LENGTH = 4M
+   FLASH_NS    (rx)  : ORIGIN = 0x00000000, LENGTH = 4M /* idau non secure*/
+   FLASH_S     (rx)  : ORIGIN = 0x10000000, LENGTH = 4M /* idau secure */
+   RAM_NS      (rwx) : ORIGIN = 0x28000000, LENGTH = 4M /* idau nonsecure */
+   RAM_S       (rwx) : ORIGIN = 0x38000000, LENGTH = 4M /* idau secure */
+   RAM1_NS     (rwx) : ORIGIN = 0x20000000, LENGTH = 32K /* idau nonsecure*/
+   PSRAM       (rwx) : ORIGIN = 0x80000000, LENGTH = 16M /* idau nonsecure */
 }
 
 /* Entry Point (reset) */
@@ -34,12 +26,16 @@ SECTIONS
 
   .data :
   {
+    __data_start__ = .;
     *(.data)
+    __data_end__ = .;
   } > RAM_S AT > FLASH_S
 
   .bss :
   {
+    __bss_start__ = .;
     *(.bss)
+    __bss_end__ = .;
   } > RAM_S
 
   /*
