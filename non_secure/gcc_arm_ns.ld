@@ -2,9 +2,9 @@ __STACK_SIZE = 0x00100000;
 
 MEMORY
 {
-   NS_FLASH     (rx)  : ORIGIN = 0x00200000, LENGTH = 512K
-   NS_FLASH_END (rx)  : ORIGIN = 0x00260000, LENGTH = 512K
-   NS_RAM       (rwx) : ORIGIN = 0x28200000, LENGTH = 32K
+   FLASH_NS     (rx)  : ORIGIN = 0x00200000, LENGTH = 512K
+   FLASH_NS_END (rx)  : ORIGIN = 0x00260000, LENGTH = 512K
+   RAM_NS       (rwx) : ORIGIN = 0x28200000, LENGTH = 32K
 }
 
 /* Entry Point (reset) */
@@ -20,14 +20,14 @@ SECTIONS
     *(.text)
     *(.data)
   	*(.bss) 
-  } > NS_FLASH
+  } > FLASH_NS
 
   .ARM.exidx :
   {
     __exidx_start = .;
      *(.ARM.exidx* .gnu.linkonce.armexidx.*)
     __exidx_end = .;
-  } > NS_FLASH
+  } > FLASH_NS
   /* define a global symbol _etext just after the last code byte */
   _etext = .;
 
@@ -39,12 +39,12 @@ SECTIONS
     KEEP(*(.heap))
     __heap_end__ = .;
     __HeapLimit = __heap_end__;
-  } > NS_FLASH
+  } > FLASH_NS
 
 
 
   /* Set __StackTop for the vector table first index. */
-  __StackTop = ORIGIN(NS_FLASH_END) + LENGTH(NS_FLASH_END);
+  __StackTop = ORIGIN(FLASH_NS_END) + LENGTH(FLASH_NS_END);
   /*
    * Stack is descending, meaning that putting values in the stack will decrease
    * so the limit of the stack is less than the base size address.
