@@ -3,9 +3,9 @@ __STACK_SIZE = 0x00100000;
 MEMORY
 {
  /* Flash is actually 224M */
-   S_FLASH     (rx)  : ORIGIN = 0x10000000, LENGTH = 512K
-   S_FLASH_END (rx)  : ORIGIN = 0x10020000, LENGTH = 32K
-   S_RAM       (rwx) : ORIGIN = 0x38000000, LENGTH = 64K
+   FLASH_S     (rx)  : ORIGIN = 0x10000000, LENGTH = 512K
+   FLASH_S_END (rx)  : ORIGIN = 0x10020000, LENGTH = 32K
+   RAM_S       (rwx) : ORIGIN = 0x38000000, LENGTH = 64K
 }
 
 /* Entry Point (reset) */
@@ -19,17 +19,17 @@ SECTIONS
     /* Make sure the vector is the first point of the project. */
     KEEP(*(.vectors))
     *(.text)
-  } > S_FLASH
+  } > FLASH_S
 
   .data :
   {
     *(.data)
-  } > S_RAM AT > S_FLASH
+  } > RAM_S AT > FLASH_S
 
   .bss :
   {
     *(.bss)
-  } > S_RAM
+  } > RAM_S
 
   /*
    * SG veneers:
@@ -44,10 +44,10 @@ SECTIONS
     *(.gnu.sgstubs*)
     . = ALIGN(32);
     _ld_veneer_limit = .;
-  } > S_FLASH
+  } > FLASH_S
 
   /* Set __StackTop for the vector table first index. */
-  __StackTop = ORIGIN(S_FLASH_END) + LENGTH(S_FLASH_END);
+  __StackTop = ORIGIN(FLASH_S_END) + LENGTH(FLASH_S_END);
   /*
    * Stack is descending, meaning that putting values in the stack will decrease
    * so the limit of the stack is less than the base size address.
