@@ -23,10 +23,9 @@ set(SECURE_SOURCES
 )
 
 set(NONSECURE_SOURCES
-    non_secure/boot_ns.S
+    non_secure/startup_ARMCM33_ns.c
     non_secure/main_ns.c
     non_secure/system_ARMCM33_ns.c
-    non_secure/boot_ns.S
     common/logPrint.c
     common/uart.c
 )
