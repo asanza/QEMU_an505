@@ -19,9 +19,17 @@ SECTIONS
     /* Make sure the vector is the first point of the project. */
     KEEP(*(.vectors))
     *(.text)
-    *(.data)
-  	*(.bss) 
   } > S_FLASH
+
+  .data :
+  {
+    *(.data)
+  } > S_RAM AT > S_FLASH
+
+  .bss :
+  {
+    *(.bss)
+  } > S_RAM
 
   /*
    * SG veneers:
