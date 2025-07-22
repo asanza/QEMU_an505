@@ -1,10 +1,22 @@
 __STACK_SIZE = 0x00100000;
 
+    /* NS Code Memory
+    CODE_NS      (rx)  : ORIGIN = 0x00000000, LENGTH = 224M
+
+    /* S Code Memory 
+    CODE_S       (rx)  : ORIGIN = 0x10000000, LENGTH = 224M
+
+    /* Internal SRAM 
+    SRAM0        (rwx) : ORIGIN = 0x20000000, LENGTH = 16M
+    SRAM1        (rwx) : ORIGIN = 0x30000000, LENGTH = 16M 
+    */
+
+
 MEMORY
 {
  /* Flash is actually 224M */
    FLASH_S     (rx)  : ORIGIN = 0x10000000, LENGTH = 512K
-   RAM_S       (rwx) : ORIGIN = 0x38000000, LENGTH = 64K
+   RAM_S       (rwx) : ORIGIN = 0x38000000, LENGTH = 4M
 }
 
 /* Entry Point (reset) */
