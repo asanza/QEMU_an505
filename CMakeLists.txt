@@ -13,10 +13,9 @@ set(IMPLIB_PATH ${PROJECT_BINARY_DIR})
 
 # Source files
 set(SECURE_SOURCES
-    secure/startup_ARMCM33.S
+    secure/startup_ARMCM33.c
     secure/main.c
     secure/system_ARMCM33.c
-    secure/startup_ARMCM33.S
     secure/partition_ARMCM33.h
     common/logPrint.c
     common/uart.c

@@ -1,6 +1,6 @@
 /*
- * Non-secure C startup file for ARM Cortex-M33
- * Based on boot_ns.S
+ * Secure C startup file for ARM Cortex-M33
+ * Based on startup_ARMCM33.S
  */
 #include <stdint.h>
 
@@ -11,6 +11,7 @@ void HardFault_Handler(void)  __attribute__((weak, alias("Default_Handler")));
 void MemManage_Handler(void)  __attribute__((weak, alias("Default_Handler")));
 void BusFault_Handler(void)   __attribute__((weak, alias("Default_Handler")));
 void UsageFault_Handler(void) __attribute__((weak, alias("Default_Handler")));
+void SecureFault_Handler(void)__attribute__((weak, alias("Default_Handler")));
 void SVC_Handler(void)        __attribute__((weak, alias("Default_Handler")));
 void DebugMon_Handler(void)   __attribute__((weak, alias("Default_Handler")));
 void PendSV_Handler(void)     __attribute__((weak, alias("Default_Handler")));
@@ -28,11 +29,12 @@ void Interrupt8_Handler(void) __attribute__((weak, alias("Default_Handler")));
 void Interrupt9_Handler(void) __attribute__((weak, alias("Default_Handler")));
 
 /* Stack top defined by linker script */
-extern void __StackTop(void);
+extern void __StackTop();
+extern uint32_t __StackLimit;
 
 /* Vector table */
 __attribute__((section(".vectors")))
-void (*const g_interrupt_vector_ns[])(void)  = {
+void (*const g_interrupt_vector_s[])(void) = {
     &__StackTop,            /* Top of Stack */
     Reset_Handler,          /* Reset Handler */
     NMI_Handler,            /* NMI Handler */
@@ -40,7 +42,7 @@ void (*const g_interrupt_vector_ns[])(void)  = {
     MemManage_Handler,      /* MPU Fault Handler */
     BusFault_Handler,       /* Bus Fault Handler */
     UsageFault_Handler,     /* Usage Fault Handler */
-    0,                      /* Secure Fault Handler */
+    SecureFault_Handler,    /* Secure Fault Handler */
     0,                      /* Reserved */
     0,                      /* Reserved */
     0,                      /* Reserved */
@@ -69,7 +71,10 @@ void Default_Handler(void) {
 
 /* Reset handler */
 void Reset_Handler(void) {
-    /* Optionally set up stack limit, etc. */
+    /* Set up stack limit (MSPLIM) if needed */
+    #ifdef __ARM_FEATURE_CMSE
+    __asm volatile ("ldr r0, =__StackLimit\n\tmsr msplim, r0" : : : "r0");
+    #endif
     /* Call main */
     extern int main(void);
     main();

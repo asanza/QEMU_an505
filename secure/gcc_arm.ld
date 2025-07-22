@@ -15,6 +15,7 @@ SECTIONS
 {
   .text : 
   {
+    PROVIDE(__Vectors = .);
     /* Make sure the vector is the first point of the project. */
     KEEP(*(.vectors))
     *(.text)
