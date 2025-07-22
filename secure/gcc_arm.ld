@@ -4,7 +4,6 @@ MEMORY
 {
  /* Flash is actually 224M */
    FLASH_S     (rx)  : ORIGIN = 0x10000000, LENGTH = 512K
-   FLASH_S_END (rx)  : ORIGIN = 0x10020000, LENGTH = 32K
    RAM_S       (rwx) : ORIGIN = 0x38000000, LENGTH = 64K
 }
 
@@ -47,7 +46,7 @@ SECTIONS
   } > FLASH_S
 
   /* Set __StackTop for the vector table first index. */
-  __StackTop = ORIGIN(FLASH_S_END) + LENGTH(FLASH_S_END);
+  __StackTop = ORIGIN(RAM_S) + LENGTH(RAM_S);
   /*
    * Stack is descending, meaning that putting values in the stack will decrease
    * so the limit of the stack is less than the base size address.
